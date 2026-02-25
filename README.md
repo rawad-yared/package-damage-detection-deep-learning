@@ -154,6 +154,7 @@ package-damage-detection-deep-learning/
 │   ├── damaged/                        # 286 images
 │   └── intact/                         # 342 images
 ├── requirements.txt
+├── run.sh                              # Launch script (uses venv automatically)
 ├── .gitignore
 └── README.md
 ```
@@ -195,12 +196,19 @@ The trained `.keras` model files are stored under `src/models/`. If they are not
 
 ### 5. Launch the Application
 
-Make sure the virtual environment is activated, then run:
+```bash
+./run.sh
+```
+
+Or manually (make sure the virtual environment is activated):
 
 ```bash
+source venv/bin/activate
 cd src
 python -m streamlit run app.py
 ```
+
+> **Note:** Always use `python -m streamlit` rather than bare `streamlit` to ensure the venv's packages are used. System-wide installations (e.g. Anaconda) can shadow the venv binary.
 
 The app will open in your browser at `http://localhost:8501`.
 
