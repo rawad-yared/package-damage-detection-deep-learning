@@ -2,7 +2,7 @@
 
 Binary image classifier that distinguishes **damaged** from **intact** shipping packages using convolutional neural networks, deployed as an interactive Streamlit web application.
 
-> **Live Demo:** _Link will be added after Streamlit Cloud deployment._
+> **Live Demo:** [Package Damage Detection App](https://rawad-yared-package-damage-detection-deep-learni-srcapp-dzj5vp.streamlit.app)
 
 ---
 
