@@ -81,7 +81,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    subgraph Custom CNN – 109,889 params
+    subgraph CustomCNN["Custom CNN - 109,889 params"]
         I["Input 224×224×3"] --> AUG["Augmentation + Rescaling 1/255"]
         AUG --> C1["Conv2D 32 3×3 ReLU → MaxPool"]
         C1 --> C2["Conv2D 64 3×3 ReLU → MaxPool"]
@@ -98,7 +98,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph MobileNetV2 Transfer – 2,627,137 params
+    subgraph MobileNetV2["MobileNetV2 Transfer - 2,627,137 params"]
         I2["Input 224×224×3"] --> AUG2["Augmentation + MobileNetV2 Preprocessing"]
         AUG2 --> BASE["MobileNetV2 Backbone\n(ImageNet weights, frozen)\n2.26M params"]
         BASE --> GAP2["Global Average Pooling"]
