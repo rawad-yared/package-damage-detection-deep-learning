@@ -12,11 +12,11 @@ st.title("📦 Package Damage Detection")
 st.write("Choose a model, then upload an image or take a photo to predict **Damaged vs Intact**.")
 
 IMG_SIZE = (224, 224)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Update these paths to match your project structure
 MODEL_PATHS = {
-    "Custom CNN": "models/custom_cnn_best.keras",
-    "MobileNetV2 (Transfer Learning)": "models/mobilenetv2_stage1_best.keras",
+    "Custom CNN": os.path.join(BASE_DIR, "models", "custom_cnn_best.keras"),
+    "MobileNetV2 (Transfer Learning)": os.path.join(BASE_DIR, "models", "mobilenetv2_stage1_best.keras"),
 }
 
 # IMPORTANT: ensure this matches the class order used during training
