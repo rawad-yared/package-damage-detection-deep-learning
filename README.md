@@ -153,6 +153,7 @@ package-damage-detection-deep-learning/
 ├── dataset/                            # Dataset (not tracked in git)
 │   ├── damaged/                        # 286 images
 │   └── intact/                         # 342 images
+├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
@@ -165,6 +166,7 @@ package-damage-detection-deep-learning/
 
 - Python 3.9+
 - pip
+- git
 
 ### 1. Clone the Repository
 
@@ -173,17 +175,25 @@ git clone https://github.com/<your-username>/package-damage-detection-deep-learn
 cd package-damage-detection-deep-learning
 ```
 
-### 2. Install Dependencies
+### 2. Create a Virtual Environment
 
 ```bash
-pip install tensorflow streamlit numpy pillow
+python -m venv venv
+source venv/bin/activate        # macOS / Linux
+venv\Scripts\activate           # Windows
 ```
 
-### 3. Obtain Model Weights
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Obtain Model Weights
 
 The trained `.keras` model files are stored under `src/models/`. If they are not included in the repository (due to size), retrain using the provided notebook (`notebooks/model-training.ipynb`) on Google Colab, then copy the output weights into `src/models/`.
 
-### 4. Launch the Application
+### 5. Launch the Application
 
 ```bash
 cd src
