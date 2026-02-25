@@ -27,7 +27,7 @@ CLASS_NAMES = ["damaged", "intact"]  # 0, 1
 @st.cache_resource(show_spinner=False)
 def load_model_cached(model_path: str):
     import tensorflow as tf
-    return tf.keras.models.load_model(model_path)
+    return tf.keras.models.load_model(model_path, safe_mode=False)
 
 
 def preprocess_image(img: Image.Image) -> np.ndarray:
