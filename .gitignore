@@ -1,0 +1,49 @@
+# Report files
+Report*
+report*
+*.docx
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# TensorFlow / Keras
+*.h5
+
+# Dataset (large binary assets — tracked separately or downloaded)
+dataset/
+
+# Model weights (large binary assets)
+src/models/*.keras
+
+# Misc
+*.log
+*.bak
+*.tmp
