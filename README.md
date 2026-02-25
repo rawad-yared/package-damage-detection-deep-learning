@@ -195,9 +195,11 @@ The trained `.keras` model files are stored under `src/models/`. If they are not
 
 ### 5. Launch the Application
 
+Make sure the virtual environment is activated, then run:
+
 ```bash
 cd src
-streamlit run app.py
+python -m streamlit run app.py
 ```
 
 The app will open in your browser at `http://localhost:8501`.
