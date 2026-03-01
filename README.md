@@ -16,7 +16,8 @@ Binary image classifier that distinguishes **damaged** from **intact** shipping 
 6. [Project Structure](#project-structure)
 7. [Getting Started](#getting-started)
 8. [Usage](#usage)
-9. [License](#license)
+9. [Deployment](#deployment)
+10. [License](#license)
 
 ---
 
@@ -115,8 +116,11 @@ flowchart TD
 flowchart LR
     subgraph Streamlit App
         U["User"] -->|Upload / Camera| APP["app.py"]
-        APP -->|Load| M["Cached .keras Model"]
-        M -->|Predict| R["Prediction + Confidence"]
+        APP --> RT{"Runtime Detection"}
+        RT -->|ai-edge-litert| TFL["Load .tflite Model"]
+        RT -->|tensorflow| KER["Load .keras Model"]
+        TFL --> R["Prediction + Confidence"]
+        KER --> R
         R --> U
     end
 ```
@@ -144,17 +148,21 @@ MobileNetV2 with a frozen backbone was selected as the production model due to i
 ```
 package-damage-detection-deep-learning/
 ├── src/
-│   ├── app.py                          # Streamlit web application
+│   ├── app.py                              # Streamlit web application (dual runtime)
+│   ├── convert_to_tflite.py                # One-time .keras → .tflite conversion script
 │   └── models/
-│       ├── custom_cnn_best.keras       # Trained Custom CNN weights
-│       └── mobilenetv2_stage1_best.keras  # Trained MobileNetV2 weights
+│       ├── custom_cnn_best.keras           # Trained Custom CNN (git-ignored, for local dev)
+│       ├── custom_cnn_best.tflite          # TFLite Custom CNN (tracked, for cloud)
+│       ├── mobilenetv2_stage1_best.keras   # Trained MobileNetV2 (git-ignored, for local dev)
+│       └── mobilenetv2_stage1_best.tflite  # TFLite MobileNetV2 (tracked, for cloud)
 ├── notebooks/
-│   └── model-training.ipynb            # Training & evaluation notebook (Google Colab)
-├── dataset/                            # Dataset (not tracked in git)
-│   ├── damaged/                        # 286 images
-│   └── intact/                         # 342 images
-├── requirements.txt
-├── run.sh                              # Launch script (uses venv automatically)
+│   └── model-training.ipynb                # Training & evaluation notebook (Google Colab)
+├── dataset/                                # Dataset (not tracked in git)
+│   ├── damaged/                            # 286 images
+│   └── intact/                             # 342 images
+├── requirements.txt                        # Cloud dependencies (ai-edge-litert)
+├── requirements-dev.txt                    # Local dev dependencies (full TensorFlow)
+├── run.sh                                  # Launch script (uses venv automatically)
 ├── .gitignore
 └── README.md
 ```
@@ -187,12 +195,24 @@ venv\Scripts\activate           # Windows
 ### 3. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+This installs **everything** you need: TensorFlow, Streamlit, NumPy, Pillow, and ai-edge-litert. The app will use TensorFlow and load `.keras` models locally.
+
+> **Note:** `requirements.txt` (without `-dev`) contains only the lightweight cloud dependencies (`ai-edge-litert`) and is read automatically by Streamlit Cloud. For local development, always use `requirements-dev.txt`.
 
 ### 4. Obtain Model Weights
 
-The trained `.keras` model files are stored under `src/models/`. If they are not included in the repository (due to size), retrain using the provided notebook (`notebooks/model-training.ipynb`) on Google Colab, then copy the output weights into `src/models/`.
+The `.tflite` model files are tracked in the repository and will be available after cloning — these are used by the cloud deployment and the lightweight runtime.
+
+The larger `.keras` model files are git-ignored. To obtain them, either:
+- Retrain using the provided notebook (`notebooks/model-training.ipynb`) on Google Colab, then copy the output weights into `src/models/`.
+- Or, if you already have the `.keras` files, convert them to `.tflite` with:
+
+```bash
+python src/convert_to_tflite.py
+```
 
 ### 5. Launch the Application
 
@@ -220,6 +240,29 @@ The app will open in your browser at `http://localhost:8501`.
 2. **Adjust the decision threshold** if needed (default 0.50).
 3. **Upload an image** or **take a photo** using your device camera.
 4. View the **prediction label**, **confidence score**, and **probability bar**.
+
+---
+
+## Deployment
+
+The app uses a **dual-runtime architecture** to work both locally and on Streamlit Cloud's free tier (1 GB RAM limit):
+
+| Environment | Runtime | Model format | Dependencies |
+|---|---|---|---|
+| **Streamlit Cloud** | `ai-edge-litert` (~5 MB) | `.tflite` | `requirements.txt` |
+| **Local development** | `tensorflow` (~600 MB) | `.keras` | `requirements-dev.txt` |
+
+`app.py` auto-detects which runtime is available and loads the matching model format. The sidebar displays the active runtime and format for transparency.
+
+### Converting models
+
+After retraining, regenerate the `.tflite` files:
+
+```bash
+python src/convert_to_tflite.py
+```
+
+This runs float32 conversion (no quantization) to preserve accuracy.
 
 ---
 

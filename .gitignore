@@ -43,6 +43,9 @@ dataset/
 # Model weights (large binary assets)
 src/models/*.keras
 
+# TFLite models ARE tracked (lightweight, needed for cloud deployment)
+!src/models/*.tflite
+
 # Misc
 *.log
 *.bak
